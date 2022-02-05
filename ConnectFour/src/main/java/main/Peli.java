@@ -13,6 +13,11 @@ public class Peli {
             }
         }
     }
+    
+    public int[][] getLauta(){
+        return lauta;
+    }
+
 
     //Asettaa palan laudalle jos sarakkeessa on tilaa.
     public boolean asetaPala(int sarake, int pelaaja){
@@ -22,54 +27,75 @@ public class Peli {
         }
         int i = 0;
         while(true){
-            if(lauta[i+1][sarake] != 0){
-                lauta[i][sarake] = pelaaja;
-                uudenPalanSarake = sarake;
-                uudenPalanRivi = i;
+            if(lauta[i+1][sarake] != 0){  
+                break;
+            }
+            if(i ==4){
+                i++;
                 break;
             }
             i++;
         }
+        lauta[i][sarake] = pelaaja;
+        uudenPalanSarake = sarake;
+        uudenPalanRivi = i;
         return true;
     }
-
-    public boolean tarkistaVoitto(){        
+    
+    public boolean tarkistaVaaka(){
         //Tarkistetaan onko voittoa vaakaan
         int palojaVaakaan = 0;
         //Tarkistetaan vasen
-        if(uudenPalanSarake != 0 && lauta[uudenPalanRivi][uudenPalanSarake-1] == lauta[uudenPalanRivi][uudenPalanSarake]){
-            palojaVaakaan++;
-            if(uudenPalanSarake-1 != 0 && lauta[uudenPalanRivi][uudenPalanSarake-2] == lauta[uudenPalanRivi][uudenPalanSarake]){
+        if(uudenPalanSarake != 0){
+           if(lauta[uudenPalanRivi][uudenPalanSarake-1] == lauta[uudenPalanRivi][uudenPalanSarake]){
                 palojaVaakaan++;
-                if(uudenPalanSarake-2 != 0 && lauta[uudenPalanRivi][uudenPalanSarake-3] == lauta[uudenPalanRivi][uudenPalanSarake]){
-                    palojaVaakaan++;            
+                if(uudenPalanSarake-1 != 0){
+                    if(lauta[uudenPalanRivi][uudenPalanSarake-2] == lauta[uudenPalanRivi][uudenPalanSarake]){
+                        palojaVaakaan++;
+                        if(uudenPalanSarake-2 != 0){
+                            if(lauta[uudenPalanRivi][uudenPalanSarake-3] == lauta[uudenPalanRivi][uudenPalanSarake]){
+                                palojaVaakaan++;
+                            }
+                        }
+                    }
                 }
             }
         }
         //Tarkistetaan oikea
-        if(uudenPalanSarake != 6 && lauta[uudenPalanRivi][uudenPalanSarake+1] == lauta[uudenPalanRivi][uudenPalanSarake]){
-            palojaVaakaan++;
-            if(uudenPalanSarake+1 != 6 && lauta[uudenPalanRivi][uudenPalanSarake+2] == lauta[uudenPalanRivi][uudenPalanSarake]){
+        if(uudenPalanSarake != 6){
+           if(lauta[uudenPalanRivi][uudenPalanSarake+1] == lauta[uudenPalanRivi][uudenPalanSarake]){
                 palojaVaakaan++;
-                if(uudenPalanSarake+2 != 6 && lauta[uudenPalanRivi][uudenPalanSarake+3] == lauta[uudenPalanRivi][uudenPalanSarake]){
-                    palojaVaakaan++;            
+                if(uudenPalanSarake+1 != 6){
+                    if(lauta[uudenPalanRivi][uudenPalanSarake+2] == lauta[uudenPalanRivi][uudenPalanSarake]){
+                        palojaVaakaan++;
+                        if(uudenPalanSarake+2 != 6){
+                            if(lauta[uudenPalanRivi][uudenPalanSarake+3] == lauta[uudenPalanRivi][uudenPalanSarake]){
+                                palojaVaakaan++;
+                            }
+                        }
+                    }
                 }
             }
         }
-        if(palojaVaakaan > 3){
+        if(palojaVaakaan > 2){
             return true;
         }
+        return false;
+    }
 
+    public boolean tarkistaPysty(){
         //Tarkistetaan onko voittoa pystyyn
-        if(uudenPalanRivi < 2){
-            if(lauta[uudenPalanRivi][uudenPalanSarake] == lauta[uudenPalanRivi-1][uudenPalanSarake] &&
-               lauta[uudenPalanRivi][uudenPalanSarake] == lauta[uudenPalanRivi-2][uudenPalanSarake] &&
-               lauta[uudenPalanRivi][uudenPalanSarake] == lauta[uudenPalanRivi-3][uudenPalanSarake]){
-               return true;
+        if(uudenPalanRivi < 3){
+            if(lauta[uudenPalanRivi][uudenPalanSarake] == lauta[uudenPalanRivi+1][uudenPalanSarake] &&
+               lauta[uudenPalanRivi][uudenPalanSarake] == lauta[uudenPalanRivi+2][uudenPalanSarake] &&
+               lauta[uudenPalanRivi][uudenPalanSarake] == lauta[uudenPalanRivi+3][uudenPalanSarake]){
+                return true;
             }
         }
+        return false;
+    }
 
-        //Tarkastetaan onko voittoa vinoon alavasemmalta ylösoikeaan
+    public boolean tarkistaAlhaaltaOikealle(){
         int palatVinoon1 = 0;
         //Tarkastetaan oikealta vasemmalle
         if(uudenPalanSarake != 0 && uudenPalanRivi != 5 && lauta[uudenPalanRivi+1][uudenPalanSarake-1] == lauta[uudenPalanRivi][uudenPalanSarake]){
@@ -91,11 +117,13 @@ public class Peli {
                 }
             }
         }
-        if(palatVinoon1 > 3){
+        if(palatVinoon1 > 2){
             return true;
         }
+        return false;
+    }
 
-        //Tarkastetaan onko voittoa vinoon ylävasemmalta alaoikealle
+    public boolean tarkistaAlhaaltaVasemmalle(){
         int palatVinoon2 = 0;
         //Tarkastetaan oikealta vasemmalle
         if(uudenPalanSarake != 0 && uudenPalanRivi != 0 && lauta[uudenPalanRivi-1][uudenPalanSarake-1] == lauta[uudenPalanRivi][uudenPalanSarake]){
@@ -117,10 +145,16 @@ public class Peli {
                 }
             }
         }
-        if(palatVinoon2 > 3){
+        if(palatVinoon2 > 2){
             return true;
         }
-        
+        return false;
+    }
+
+    public boolean tarkistaVoitot(){        
+        if(tarkistaVaaka() || tarkistaPysty() || tarkistaAlhaaltaOikealle() || tarkistaAlhaaltaVasemmalle()){
+            return true;
+        }
         return false;
     }
       
