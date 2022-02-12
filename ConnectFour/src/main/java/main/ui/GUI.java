@@ -65,7 +65,7 @@ public class GUI extends Application{
         sarake1.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent t){
-                if(peli.asetaPala(0, vuoro)){
+                if(peli.asetaPala(0)){
                     for(int i=0;i<6;i++){
                         if(ruudut[i+1].getFill() != Color.WHITE || i == 5){
                             if(vuoro == 1){
@@ -98,7 +98,7 @@ public class GUI extends Application{
         sarake2.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent t){
-                if(peli.asetaPala(1, vuoro)){
+                if(peli.asetaPala(1)){
                     for(int i=6;i<12;i++){
                         if(ruudut[i+1].getFill() != Color.WHITE || i == 11){
                             if(vuoro == 1){
@@ -131,7 +131,7 @@ public class GUI extends Application{
         sarake3.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent t){
-                if(peli.asetaPala(2, vuoro)){
+                if(peli.asetaPala(2)){
                     for(int i=12;i<18;i++){
                         if(ruudut[i+1].getFill() != Color.WHITE || i == 17){
                             if(vuoro == 1){
@@ -164,7 +164,7 @@ public class GUI extends Application{
         sarake4.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent t){
-                if(peli.asetaPala(3, vuoro)){
+                if(peli.asetaPala(3)){
                     for(int i=18;i<24;i++){
                         if(ruudut[i+1].getFill() != Color.WHITE || i == 23){
                             if(vuoro == 1){
@@ -197,7 +197,7 @@ public class GUI extends Application{
         sarake5.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent t){
-                if(peli.asetaPala(4, vuoro)){
+                if(peli.asetaPala(4)){
                     for(int i=24;i<30;i++){
                         if(ruudut[i+1].getFill() != Color.WHITE || i == 29){
                             if(vuoro == 1){
@@ -230,7 +230,7 @@ public class GUI extends Application{
         sarake6.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent t){
-                if(peli.asetaPala(5, vuoro)){
+                if(peli.asetaPala(5)){
                     for(int i=30;i<36;i++){
                         if(ruudut[i+1].getFill() != Color.WHITE || i == 35){
                             if(vuoro == 1){
@@ -263,7 +263,7 @@ public class GUI extends Application{
         sarake7.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent t){
-                if(peli.asetaPala(6, vuoro)){
+                if(peli.asetaPala(6)){
                     for(int i=36;i<42;i++){
                         if(ruudut[i+1].getFill() != Color.WHITE){
                             if(vuoro == 1){

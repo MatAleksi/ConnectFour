@@ -27,6 +27,26 @@ public class PeliTest {
         }
         assertTrue(tarkistus);
     }
-
     
+    @Test
+    public void asetaPalaAsettaaPalanOikein(){
+        peli.asetaPala(2);
+        assertEquals(1, peli.getLauta()[5][2]);
+    }
+    
+    @Test
+    public void asetaPalaFalseJosTaysi(){
+        for(int i=0;i<6;i++){
+            peli.asetaPala(2);
+        }
+        assertFalse(peli.asetaPala(2));
+    }
+    
+    @Test
+    public void tarkistaPystyPalauttaaTrue(){
+        for(int i=0;i<4;i++){
+            peli.asetaPala(2);
+        }
+        assertTrue(peli.tarkistaPysty());
+    }
 }

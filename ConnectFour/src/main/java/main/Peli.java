@@ -4,6 +4,7 @@ public class Peli {
     private int[][] lauta;
     private int uudenPalanSarake;
     private int uudenPalanRivi;
+    private int vuoro;
 
     public Peli(){
         this.lauta = new int[6][7];   
@@ -12,15 +13,29 @@ public class Peli {
                 lauta[y][x] = 0;
             }
         }
+        this.vuoro = 1;
     }
     
     public int[][] getLauta(){
         return lauta;
     }
+    
+    public int getEdellinenSiirto(){
+        return uudenPalanSarake;
+    }
 
+    public void setLauta(int[][] uusiLauta){
+        lauta = uusiLauta;
+    }
+    public boolean onkoSarakeTaysi(int sarake){
+        if(lauta[0][sarake] != 0){
+            return true;
+        }
+        return false;
+    }
 
     //Asettaa palan laudalle jos sarakkeessa on tilaa.
-    public boolean asetaPala(int sarake, int pelaaja){
+    public boolean asetaPala(int sarake){
         //Jos sarake on täynnä palautetaan false
         if(lauta[0][sarake] != 0){
             return false;
@@ -36,7 +51,7 @@ public class Peli {
             }
             i++;
         }
-        lauta[i][sarake] = pelaaja;
+        lauta[i][sarake] = vuoro;
         uudenPalanSarake = sarake;
         uudenPalanRivi = i;
         return true;
