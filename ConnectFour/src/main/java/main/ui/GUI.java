@@ -1,6 +1,7 @@
 package main.ui;
 
 import main.Peli;
+import main.Tekoaly;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -26,6 +27,11 @@ public class GUI extends Application{
     private Scene taysi;
     private Scene voitto;
     private Stage popup;
+    private Boolean peliKaynnissa;
+
+    //Ihminen1 ja Ihminen2 tallettavat tiedot pelaako ihminen vai tekoäly
+    private Boolean ihminenPelaa1;
+    private Boolean ihminenPelaa2;
     
     @Override
     public void init()throws Exception{
@@ -46,6 +52,9 @@ public class GUI extends Application{
         }
         vuoro = 1;
         peli = new Peli();
+        ihminenPelaa1 = true;
+        ihminenPelaa2 = true;
+        peliKaynnissa = true;
     }
     
     @Override
@@ -78,6 +87,7 @@ public class GUI extends Application{
                     }
                     if(peli.tarkistaVoitot()){
                         voittoRuutu.getChildren().add(new Label("Pelaaja " + vuoro + " voitti!"));
+                        peliKaynnissa = false;
                         popup.setScene(voitto);
                         popup.show();
                     }else{
@@ -111,6 +121,7 @@ public class GUI extends Application{
                     }
                     if(peli.tarkistaVoitot()){
                         voittoRuutu.getChildren().add(new Label("Pelaaja " + vuoro + " voitti!"));
+                        peliKaynnissa = false;
                         popup.setScene(voitto);
                         popup.show();
                     }else{
@@ -144,6 +155,7 @@ public class GUI extends Application{
                     }
                     if(peli.tarkistaVoitot()){
                         voittoRuutu.getChildren().add(new Label("Pelaaja " + vuoro + " voitti!"));
+                        peliKaynnissa = false;
                         popup.setScene(voitto);
                         popup.show();
                     }else{
@@ -177,6 +189,7 @@ public class GUI extends Application{
                     }
                     if(peli.tarkistaVoitot()){
                         voittoRuutu.getChildren().add(new Label("Pelaaja " + vuoro + " voitti!"));
+                        peliKaynnissa = false;
                         popup.setScene(voitto);
                         popup.show();
                     }else{
@@ -210,6 +223,7 @@ public class GUI extends Application{
                     }
                     if(peli.tarkistaVoitot()){
                         voittoRuutu.getChildren().add(new Label("Pelaaja " + vuoro + " voitti!"));
+                        peliKaynnissa = false;
                         popup.setScene(voitto);
                         popup.show();
                     }else{
@@ -243,6 +257,7 @@ public class GUI extends Application{
                     }
                     if(peli.tarkistaVoitot()){
                         voittoRuutu.getChildren().add(new Label("Pelaaja " + vuoro + " voitti!"));
+                        peliKaynnissa = false;
                         popup.setScene(voitto);
                         popup.show();
                     }else{
@@ -285,6 +300,7 @@ public class GUI extends Application{
                     }
                     if(peli.tarkistaVoitot()){
                         voittoRuutu.getChildren().add(new Label("Pelaaja " + vuoro + " voitti!"));
+                        peliKaynnissa = false;
                         popup.setScene(voitto);
                         popup.show();
                     }else{
@@ -304,9 +320,88 @@ public class GUI extends Application{
         asettelu.getChildren().addAll(sarakkeidenNapit);
         asettelu.getChildren().addAll(lauta);
         Scene glauta = new Scene(asettelu, 680, 595);
-        stage.setScene(glauta);
+        
+        //Aloitusikkuna jossa valitaan pelaajiksi ihmiset tai tekoälyt
+        HBox aloitusIkkuna = new HBox();
+        VBox pelaaja1 = new VBox();
+        Label pelaa1 = new Label("Ihminen");
+        Button ihminen1 = new Button("Pelaaja"); 
+        Button tietokone1 = new Button("Tietokone");
+        ihminen1.setOnAction(new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent t){
+                pelaa1.setText("Ihminen");
+                ihminenPelaa1 = true;
+            }
+        });
+        tietokone1.setOnAction(new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent t){
+                pelaa1.setText("Tekoäly");
+                ihminenPelaa1 = false;
+            }
+        });           
+        pelaaja1.getChildren().add(ihminen1);
+        pelaaja1.getChildren().add(tietokone1);
+        pelaaja1.getChildren().add(pelaa1);        
+
+        VBox pelaaja2 = new VBox();
+        Label pelaa2 = new Label("Ihminen");
+        Button ihminen2 = new Button("Pelaaja");
+        Button tietokone2 = new Button("Tietokone");
+        ihminen2.setOnAction(new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent t){
+                pelaa2.setText("Ihminen");
+                ihminenPelaa2 = true;
+            }
+        });
+        tietokone2.setOnAction(new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent t){
+                pelaa2.setText("Tekoäly");
+                ihminenPelaa2 = false;
+            }
+        });        
+
+        pelaaja2.getChildren().add(ihminen2);
+        pelaaja2.getChildren().add(tietokone2);
+        pelaaja2.getChildren().add(pelaa2);
+
+        Button aloitaPeli = new Button("Aloita");
+        aloitaPeli.setOnAction(new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent t){
+                peliKaynnissa = true;
+                stage.setScene(glauta);
+            }
+        });
+        aloitusIkkuna.getChildren().add(pelaaja1);
+        aloitusIkkuna.getChildren().add(aloitaPeli);
+        aloitusIkkuna.getChildren().add(pelaaja2);
+
+        Scene aloitus = new Scene(aloitusIkkuna, 200, 100);
+        stage.setScene(aloitus);
         stage.show();
+        VBox tekoalynApu = new VBox();
+        Label pyynto = new Label("Odotan");
+        Button tekoalyKutsu = new Button("Tekoälyn siirto");
+        tekoalyKutsu.setOnAction(new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent t){
+                Tekoaly tekoaly = new Tekoaly();
+                int siirto = tekoaly.haeParasSiirto(peli)+1;
+                pyynto.setText("Voisitko klikata saraketta " + siirto);
+           }
+        });
+        tekoalynApu.getChildren().addAll(tekoalyKutsu, pyynto);
+        Scene avunPyynto = new Scene(tekoalynApu, 200, 50);
+        Stage apuStage = new Stage();
+        apuStage.setScene(avunPyynto);
+        apuStage.show();
     }
+
+
     public static void main(String args[]){
         launch(args);
     }

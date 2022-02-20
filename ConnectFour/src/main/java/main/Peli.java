@@ -15,15 +15,46 @@ public class Peli {
         }
         this.vuoro = 1;
     }
+    public Peli(Peli peli){
+        this.lauta = peli.getLauta();
+        this.vuoro = peli.getVuoro();
+        this.uudenPalanRivi = peli.getEdellinenRivi();
+        this.uudenPalanSarake = peli.getEdellinenSiirto();
+    }
     
     public int[][] getLauta(){
         return lauta;
     }
     
+    public int getVuoro(){
+        if(vuoro == 1){
+            return 2;
+        }
+        return 1;
+    }
+    public void setVuoro(int vuor){
+        vuoro = vuor;
+    }
+
+    public void poistaEdellinen(){
+        lauta[uudenPalanRivi][uudenPalanSarake] = 0;
+    }
+    
+    public int getEdellinenRivi(){
+        return uudenPalanRivi;
+    }
     public int getEdellinenSiirto(){
         return uudenPalanSarake;
     }
-
+    
+    public boolean lautaTaysi(){
+        for(int i=0;i<6;i++){
+            if(!onkoSarakeTaysi(i)){
+                return false;
+            }
+        }
+        return true;
+    }
     public void setLauta(int[][] uusiLauta){
         lauta = uusiLauta;
     }
@@ -37,7 +68,7 @@ public class Peli {
     //Asettaa palan laudalle jos sarakkeessa on tilaa.
     public boolean asetaPala(int sarake){
         //Jos sarake on täynnä palautetaan false
-        if(lauta[0][sarake] != 0){
+        if(onkoSarakeTaysi(sarake)){
             return false;
         }
         int i = 0;
@@ -52,6 +83,11 @@ public class Peli {
             i++;
         }
         lauta[i][sarake] = vuoro;
+        if(vuoro == 1){
+            vuoro = 2;
+        }else{
+            vuoro = 1;
+        } 
         uudenPalanSarake = sarake;
         uudenPalanRivi = i;
         return true;

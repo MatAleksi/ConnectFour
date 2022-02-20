@@ -49,4 +49,20 @@ public class PeliTest {
         }
         assertTrue(peli.tarkistaPysty());
     }
+
+    @Test
+    public void tarkistaVaakaVasenToimii(){
+        for(int i=0;i<4;i++){
+            peli.asetaPala(i);
+        }
+        assertTrue(peli.tarkistaVaaka());
+    }
+
+    @Test
+    public void tarkistaVaakaOikeaToimii(){
+        for(int i=3;i<7;i++){
+            peli.asetaPala(i);
+        }
+        assertTrue(peli.tarkistaVaaka());
+    }
 }
