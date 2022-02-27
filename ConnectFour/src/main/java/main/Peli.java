@@ -35,11 +35,23 @@ public class Peli {
     public void setVuoro(int vuor){
         vuoro = vuor;
     }
-
-    public void poistaEdellinen(){
-        lauta[uudenPalanRivi][uudenPalanSarake] = 0;
+    public void setEdellinenSiirto(int sarake){
+        int i = 0;
+        while(true){
+            if(lauta[i+1][sarake] != 0){  
+                i++;
+                break;
+            }
+            if(i ==4){
+                i++;
+                break;
+            }
+            i++;
+        }
+        uudenPalanRivi = i;
+        uudenPalanSarake = sarake;
     }
-    
+
     public int getEdellinenRivi(){
         return uudenPalanRivi;
     }

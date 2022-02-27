@@ -1,8 +1,12 @@
 package main;
 
 public class Tekoaly {
+    private int maksimoitavaPelaaja;
+    private int minimoitavaPelaaja;
 
-    public Tekoaly(){
+    public Tekoaly(int vuoro){
+        maksimoitavaPelaaja = vuoro;
+        minimoitavaPelaaja = (maksimoitavaPelaaja+1)%2;
     }
 
     public int haeParasSiirto(Peli peli){
@@ -12,18 +16,25 @@ public class Tekoaly {
                 kopio[i][j] = peli.getLauta()[i][j];
             }
         } 
-        Solmu parasSiirto = alfaBeta(kopio, 10, Integer.MIN_VALUE, Integer.MAX_VALUE, true, peli.getVuoro());
+        Solmu parasSiirto = alfaBeta(kopio, 4, Integer.MIN_VALUE, Integer.MAX_VALUE, true, peli.getVuoro(), 0);
         System.out.println();
         return parasSiirto.getSarake();
     }
     //AlfaBeta-algoritmi
-    public Solmu alfaBeta(int[][] lauta, int syvyys, int alfa, int beta, boolean maximointi, int vuoro){
-        if(syvyys == 0 ){
-            if(vuoro == 1){
-                return new Solmu(-1, siirronPisteytys(lauta, 2));
+    public Solmu alfaBeta(int[][] lauta, int syvyys, int alfa, int beta, boolean maximointi, int vuoro, int edellinen){
+        if(onkoVoitto(lauta, vuoro, edellinen)){
+            if(maximointi){
+                return new Solmu(-1, 10);
             }else{
-                return new Solmu(-1, siirronPisteytys(lauta, 1));
+                return new Solmu(-1, -10);
             }
+        }
+        System.out.println("jaigjoa");
+        if(syvyys == 0 || onkoTilaaLaudalla(lauta)){
+            if(onkoTilaaLaudalla(lauta)){
+                return new Solmu(-1, siirronPisteytys(lauta, 0));
+            }
+            return new Solmu(-1, siirronPisteytys(lauta, vuoro));
         }
         //Maximoidaan pelaaja
         if(maximointi){
@@ -49,11 +60,13 @@ public class Tekoaly {
                         y++;
                     } 
                     kopio[y][i] = vuoro;
-                    int uusiVuoro = 1;
                     if(vuoro == 1){
-                        uusiVuoro = 2;
+                        vuoro = 2;
+                    }else{
+                        vuoro = 1;
                     }
-                    int uusiArvo = Math.max(arvo, (alfaBeta(kopio, syvyys-1, alfa, beta, false, uusiVuoro)).getArvo());
+                    int uusiArvo = Math.max(arvo, (alfaBeta(kopio, syvyys-1, alfa, beta, false, vuoro, i)).getArvo());
+                    kopio[y][i] = 0;
                     if(uusiArvo > arvo){
                         arvo = uusiArvo;
                         parasSarake = i;
@@ -89,11 +102,13 @@ public class Tekoaly {
                         y++;
                     } 
                     kopio[y][i] = vuoro;
-                    int uusiVuoro = 1;
                     if(vuoro == 1){
-                        uusiVuoro = 2;
+                        vuoro = 2;
+                    }else{
+                        vuoro = 1;
                     }
-                    int uusiArvo = Math.min(arvo, (alfaBeta(kopio, syvyys-1, alfa, beta, true, uusiVuoro)).getArvo());
+                    int uusiArvo = Math.min(arvo, (alfaBeta(kopio, syvyys-1, alfa, beta, true, vuoro, i)).getArvo());
+                    kopio[y][i] = 0;
                     if(uusiArvo < arvo){
                         arvo = uusiArvo;
                         huonoinSarake = i;
@@ -107,6 +122,14 @@ public class Tekoaly {
             return new Solmu(arvo, huonoinSarake);
         }
     }
+    
+    public boolean onkoVoitto(int[][] lauta, int vuoro, int edellinen){
+        Peli peli = new Peli();
+        peli.setLauta(lauta);
+        peli.setVuoro(vuoro);
+        peli.setEdellinenSiirto(edellinen);
+        return peli.tarkistaVoitot();
+    }   
 
     public boolean onkoTilaaSarakkeessa(int sarake, int[][] lauta){
         if(lauta[0][sarake] != 0){
@@ -128,13 +151,12 @@ public class Tekoaly {
         int pisteet = 0;
         //Pisteet keskikolumnille
         int paloja = 0;
-        for(int i=0;i>=5;i--){
-            if(lauta[i][3] != vuoro){
-                break;
+        for(int i=0;i<6;i++){
+            if(lauta[i][3] == vuoro){
+                paloja++;
             }
-            paloja++;
         }
-        pisteet += paloja*3;
+        pisteet += paloja*5;
 
         //Pisteet vaakatasossa
         for(int x=0;x<6;x++){
@@ -145,20 +167,20 @@ public class Tekoaly {
             for(int i=0;i<4;i++){
                 int[] osaRivi = new int[4];
                 System.arraycopy(rivi, i, osaRivi, 0, 4);
-                pisteet += pisteytys(osaRivi, vuoro);       
+                pisteet += pisteytys(osaRivi);       
             }    
         }
 
         //Pisteet pystyyn
         for(int x=0;x<7;x++){
             int[] sarake = new int[6];
-            for(int i=6;i<6;i++){
+            for(int i=0;i<6;i++){
                 sarake[i] = lauta[i][x];
             }
             for(int i=0;i<3;i++){
                 int[] osaSarake = new int[4];
                 System.arraycopy(sarake, i, osaSarake, 0, 4);  
-                pisteet += pisteytys(osaSarake, vuoro);  
+                pisteet += pisteytys(osaSarake);  
             }
         }
 
@@ -169,7 +191,7 @@ public class Tekoaly {
                 for(int x=0;x<4;x++){
                     rivi[x] = lauta[i+x][j+x];
                 }
-                pisteet += pisteytys(rivi, vuoro);
+                pisteet += pisteytys(rivi);
             }
         }
 
@@ -179,14 +201,14 @@ public class Tekoaly {
                 for(int x=0;x<4;x++){
                     rivi[x] = lauta[i+3-x][j+x];
                 }
-                pisteet += pisteytys(rivi, vuoro);
+                pisteet += pisteytys(rivi);
             }
         } 
         return pisteet;  
     }
     
     //Pisteiden laskeminen yhdelle suunnalle
-    public int pisteytys(int[] neljaPalaa, int vuorossa){
+    public int pisteytys(int[] neljaPalaa){
         int pisteet = 0;
         int palat = 0;
         int tyhjat = 0;
@@ -195,22 +217,22 @@ public class Tekoaly {
         for(int i=0;i<4;i++){
             if(neljaPalaa[i] == 0){
                 tyhjat++;
-            }else if(neljaPalaa[i] == vuorossa){
+            }else if(neljaPalaa[i] == maksimoitavaPelaaja){
                 palat++;
             }else{
                 vPalat++;
             }
         }
         //Pisteytetään neljän palan rivi
-        if(palat > 3){
-            pisteet +=100;
-        }else if(palat == 3 && tyhjat > 0){
+        if(palat == 4){
+            pisteet +=1000;
+        }else if(palat == 3 && tyhjat == 1){
             pisteet += 5;
-        }else if(palat == 2 && tyhjat > 1){
+        }else if(palat == 2 && tyhjat == 2){
             pisteet += 2;
         }
-        if(vPalat == 3 && tyhjat > 0){
-            pisteet -= 4;
+        if(vPalat == 3 && tyhjat == 1){
+            pisteet -= 100;
         }
 
         return pisteet;          

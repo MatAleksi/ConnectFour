@@ -389,7 +389,7 @@ public class GUI extends Application{
         tekoalyKutsu.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent t){
-                Tekoaly tekoaly = new Tekoaly();
+                Tekoaly tekoaly = new Tekoaly(vuoro);
                 int siirto = tekoaly.haeParasSiirto(peli)+1;
                 pyynto.setText("Voisitko klikata saraketta " + siirto);
            }
