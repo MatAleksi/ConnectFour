@@ -1,53 +1,45 @@
 package main;
 
+import java.lang.reflect.Array;
+
 public class Tekoaly {
     private int maksimoitavaPelaaja;
-    private int minimoitavaPelaaja;
 
-    public Tekoaly(int vuoro){
-        maksimoitavaPelaaja = vuoro;
-        minimoitavaPelaaja = (maksimoitavaPelaaja+1)%2;
+    public Tekoaly(int maxvuoro){
+        maksimoitavaPelaaja = maxvuoro;
     }
 
-    public int haeParasSiirto(Peli peli){
+    public int haeParasSiirto(Peli peli, int pelattu){
         int[][] kopio = new int[6][7];
-        for(int i=0;i<6;i++){
-            for(int j=0;j<7;j++){
-                kopio[i][j] = peli.getLauta()[i][j];
-            }
-        } 
-        Solmu parasSiirto = alfaBeta(kopio, 4, Integer.MIN_VALUE, Integer.MAX_VALUE, true, peli.getVuoro(), 0);
-        System.out.println();
+        kopio = peli.getLauta();
+        int syvyys = pelattu + 1;
+        if(syvyys > 10) syvyys = 10;
+        Solmu parasSiirto = alfaBeta(kopio, syvyys, Integer.MIN_VALUE, Integer.MAX_VALUE, true, peli.getVuoro(), 0);
         return parasSiirto.getSarake();
     }
     //AlfaBeta-algoritmi
     public Solmu alfaBeta(int[][] lauta, int syvyys, int alfa, int beta, boolean maximointi, int vuoro, int edellinen){
         if(onkoVoitto(lauta, vuoro, edellinen)){
-            if(maximointi){
-                return new Solmu(-1, 10);
+            if(!maximointi){
+                return new Solmu(-1, 1000000000);
             }else{
-                return new Solmu(-1, -10);
+                return new Solmu(-1, -1000000000);
             }
         }
-        System.out.println("jaigjoa");
-        if(syvyys == 0 || onkoTilaaLaudalla(lauta)){
-            if(onkoTilaaLaudalla(lauta)){
-                return new Solmu(-1, siirronPisteytys(lauta, 0));
+        if(syvyys == 0 || !onkoTilaaLaudalla(lauta)){
+            if(!onkoTilaaLaudalla(lauta)){
+                return new Solmu(-1, 0);
             }
-            return new Solmu(-1, siirronPisteytys(lauta, vuoro));
+            return new Solmu(-1, siirronPisteytys(lauta));
         }
         //Maximoidaan pelaaja
         if(maximointi){
             int arvo = Integer.MIN_VALUE;
             int parasSarake = 3;
             for(int i=0;i<7;i++){
-                if(!onkoTilaaSarakkeessa(i, lauta)){                   
+                if(onkoTilaaSarakkeessa(i, lauta)){                   
                     int[][] kopio = new int[6][7];
-                    for(int x=0;x<6;x++){
-                        for(int j=0;j<7;j++){
-                            kopio[x][j] = lauta[x][j];
-                        }
-                    }
+                    kopio = lauta;
                     int y = 0;
                     while(true){
                         if(kopio[y+1][i] != 0){  
@@ -58,13 +50,13 @@ public class Tekoaly {
                             break;
                         }
                         y++;
-                    } 
-                    kopio[y][i] = vuoro;
+                    }
+                    kopio[y][i] = vuoro;                    
                     if(vuoro == 1){
                         vuoro = 2;
                     }else{
                         vuoro = 1;
-                    }
+                    } 
                     int uusiArvo = Math.max(arvo, (alfaBeta(kopio, syvyys-1, alfa, beta, false, vuoro, i)).getArvo());
                     kopio[y][i] = 0;
                     if(uusiArvo > arvo){
@@ -73,7 +65,7 @@ public class Tekoaly {
                     }
                     alfa = Math.max(alfa, arvo);
                     if(alfa >= beta){
-                        return new Solmu(parasSarake, arvo);
+                        break;
                     }
                 }                
             }
@@ -83,13 +75,9 @@ public class Tekoaly {
             int arvo = Integer.MAX_VALUE;
             int huonoinSarake = 3;
             for(int i=0;i<7;i++){
-                if(!onkoTilaaSarakkeessa(i, lauta)){                                     
+                if(onkoTilaaSarakkeessa(i, lauta)){                                    
                     int[][] kopio = new int[6][7];
-                    for(int x=0;x<6;x++){
-                        for(int j=0;j<7;j++){
-                            kopio[x][j] = lauta[x][j];
-                        }
-                    }
+                    kopio = lauta;
                     int y = 0;
                     while(true){
                         if(kopio[y+1][i] != 0){  
@@ -106,7 +94,7 @@ public class Tekoaly {
                         vuoro = 2;
                     }else{
                         vuoro = 1;
-                    }
+                    }                    
                     int uusiArvo = Math.min(arvo, (alfaBeta(kopio, syvyys-1, alfa, beta, true, vuoro, i)).getArvo());
                     kopio[y][i] = 0;
                     if(uusiArvo < arvo){
@@ -115,7 +103,7 @@ public class Tekoaly {
                     }
                     beta = Math.min(beta, arvo);
                     if(beta <= alfa){
-                        return new Solmu(arvo, huonoinSarake);
+                        break;
                     }
                 }                
             }
@@ -124,18 +112,16 @@ public class Tekoaly {
     }
     
     public boolean onkoVoitto(int[][] lauta, int vuoro, int edellinen){
-        Peli peli = new Peli();
-        peli.setLauta(lauta);
-        peli.setVuoro(vuoro);
-        peli.setEdellinenSiirto(edellinen);
-        return peli.tarkistaVoitot();
+        Peli testipeli = new Peli(lauta, vuoro, edellinen);
+        testipeli.setEdellinenSiirto(edellinen);
+        return testipeli.tarkistaVoitot();
     }   
 
     public boolean onkoTilaaSarakkeessa(int sarake, int[][] lauta){
         if(lauta[0][sarake] != 0){
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }    
     public boolean onkoTilaaLaudalla(int[][] lauta){
         for(int i=0;i<7;i++){
@@ -147,16 +133,14 @@ public class Tekoaly {
     }
 
     //Pisteiden laskeminen siirroille
-    public int siirronPisteytys(int[][] lauta, int vuoro){
+    public int siirronPisteytys(int[][] lauta){
         int pisteet = 0;
         //Pisteet keskikolumnille
-        int paloja = 0;
         for(int i=0;i<6;i++){
-            if(lauta[i][3] == vuoro){
-                paloja++;
+            if(lauta[i][3] == maksimoitavaPelaaja){
+                pisteet += 5;
             }
         }
-        pisteet += paloja*5;
 
         //Pisteet vaakatasossa
         for(int x=0;x<6;x++){
@@ -232,9 +216,10 @@ public class Tekoaly {
             pisteet += 2;
         }
         if(vPalat == 3 && tyhjat == 1){
-            pisteet -= 100;
+            pisteet -= 50;
+        }else if(vPalat == 2 && tyhjat == 2){
+            pisteet -=10;
         }
-
         return pisteet;          
     }
     

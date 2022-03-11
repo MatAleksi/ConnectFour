@@ -15,11 +15,10 @@ public class Peli {
         }
         this.vuoro = 1;
     }
-    public Peli(Peli peli){
-        this.lauta = peli.getLauta();
-        this.vuoro = peli.getVuoro();
-        this.uudenPalanRivi = peli.getEdellinenRivi();
-        this.uudenPalanSarake = peli.getEdellinenSiirto();
+    public Peli(int[][] pelilauta, int vuoro, int edellinen){
+        this.lauta = pelilauta;
+        this.vuoro = vuoro;
+        this.uudenPalanSarake = edellinen;
     }
     
     public int[][] getLauta(){
@@ -49,7 +48,6 @@ public class Peli {
             i++;
         }
         uudenPalanRivi = i;
-        uudenPalanSarake = sarake;
     }
 
     public int getEdellinenRivi(){
@@ -215,6 +213,9 @@ public class Peli {
     }
 
     public boolean tarkistaVoitot(){        
+        if(lauta[uudenPalanRivi][uudenPalanSarake] == 0){
+            return false;
+        }
         if(tarkistaVaaka() || tarkistaPysty() || tarkistaAlhaaltaOikealle() || tarkistaAlhaaltaVasemmalle()){
             return true;
         }

@@ -45,7 +45,8 @@ public class PeliTest {
     @Test
     public void tarkistaPystyPalauttaaTrue(){
         for(int i=0;i<4;i++){
-            peli.asetaPala(2);
+            peli.asetaPala(1);
+            peli.setVuoro(1);
         }
         assertTrue(peli.tarkistaPysty());
     }
@@ -54,6 +55,7 @@ public class PeliTest {
     public void tarkistaVaakaVasenToimii(){
         for(int i=0;i<4;i++){
             peli.asetaPala(i);
+            peli.setVuoro(1);
         }
         assertTrue(peli.tarkistaVaaka());
     }
@@ -62,7 +64,33 @@ public class PeliTest {
     public void tarkistaVaakaOikeaToimii(){
         for(int i=3;i<7;i++){
             peli.asetaPala(i);
+            peli.setVuoro(1);
         }
         assertTrue(peli.tarkistaVaaka());
     }
+    
+    @Test
+    public void tarkistaUusiPeli(){
+        int[][] lauta = new int[6][7];
+        lauta[5][5] = 1;
+        Peli peli2 = new Peli(lauta, 1, 5);
+        assertEquals(1, peli2.getLauta()[5][5]);
+    }
+
+    @Test
+    public void tarkistaUusiPeliEdellinen(){
+        int[][] lauta = new int[6][7];
+        lauta[5][5] = 1;
+        Peli peli2 = new Peli(lauta, 1, 5);
+        assertEquals(5, peli2.getEdellinenSiirto());
+    }
+
+    @Test
+    public void tarkistaEdellisenRivinAsetus(){
+        int[][] lauta = new int[6][7];
+        lauta[5][5] = 1;
+        Peli peli2 = new Peli(lauta, 1, 5);
+        peli2.setEdellinenSiirto(5);
+        assertEquals(5, peli2.getEdellinenRivi());
+    }    
 }

@@ -27,11 +27,13 @@ public class GUI extends Application{
     private Scene taysi;
     private Scene voitto;
     private Stage popup;
-    private Boolean peliKaynnissa;
+    private int pelattu;
 
     //Ihminen1 ja Ihminen2 tallettavat tiedot pelaako ihminen vai tekoäly
     private Boolean ihminenPelaa1;
     private Boolean ihminenPelaa2;
+    private Tekoaly tekoaly1;
+    private Tekoaly tekoaly2;
     
     @Override
     public void init()throws Exception{
@@ -54,7 +56,9 @@ public class GUI extends Application{
         peli = new Peli();
         ihminenPelaa1 = true;
         ihminenPelaa2 = true;
-        peliKaynnissa = true;
+        pelattu = 0;
+        tekoaly1 = new Tekoaly(1);
+        tekoaly2 = new Tekoaly(2);
     }
     
     @Override
@@ -62,13 +66,37 @@ public class GUI extends Application{
         Label varoitus = new Label("Tämä sarake on täysi");
         VBox viesti = new VBox();
         VBox voittoRuutu = new VBox();
+        VBox asettelu = new VBox();
         viesti.getChildren().add(varoitus);
         taysi = new Scene(viesti, 120, 50);
         voitto = new Scene(voittoRuutu, 200, 100);
         popup = new Stage();
         popup.setScene(taysi);
-        HBox sarakkeidenNapit = new HBox();
-                
+
+        HBox vuoroIndikaattori = new HBox();
+        Label vuorossa = new Label("Pelaajan 1 (punainen) vuoro");
+        vuoroIndikaattori.getChildren().add(vuorossa);
+        HBox tekoalynApu = new HBox();
+        Label pyynto = new Label("Odotan");
+        Button tekoalyKutsu = new Button("Tekoälyn siirto");
+        tekoalyKutsu.setOnAction(new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent t){
+                if(vuoro == 1){
+                    int siirto = tekoaly1.haeParasSiirto(peli, pelattu)+1;
+                    pyynto.setText("Voisitko klikata saraketta " + siirto);                    
+                }else{
+                    int siirto = tekoaly2.haeParasSiirto(peli, pelattu)+1;
+                    pyynto.setText("Voisitko klikata saraketta " + siirto);
+                }
+           }
+        });
+        tekoalynApu.getChildren().addAll(pyynto, tekoalyKutsu);
+        tekoalynApu.setSpacing(10);
+        vuoroIndikaattori.getChildren().addAll(tekoalynApu);
+        vuoroIndikaattori.setSpacing(250);
+
+        HBox sarakkeidenNapit = new HBox();                
         Button sarake1 = new Button("Sarake 1");
         sarake1.setPrefWidth(100);
         sarake1.setOnAction(new EventHandler<ActionEvent>(){
@@ -85,16 +113,25 @@ public class GUI extends Application{
                             break;
                         }
                     }
+                    pelattu++;
                     if(peli.tarkistaVoitot()){
                         voittoRuutu.getChildren().add(new Label("Pelaaja " + vuoro + " voitti!"));
-                        peliKaynnissa = false;
+                        asettelu.getChildren().remove(1);
                         popup.setScene(voitto);
                         popup.show();
                     }else{
                         if(vuoro == 1){
                             vuoro = 2;
+                            vuorossa.setText("Pelaajan 2 (keltainen) vuoro");
+                            if(ihminenPelaa2){
+                                pyynto.setText("Odotan");
+                            }
                         }else{
                             vuoro =1;
+                            vuorossa.setText("Pelaajan 1 (punainen) vuoro");
+                            if(ihminenPelaa1){
+                                pyynto.setText("Odotan");
+                            }
                         }
                     }
                 }else{
@@ -119,16 +156,25 @@ public class GUI extends Application{
                             break;
                         }
                     }
+                    pelattu++;
                     if(peli.tarkistaVoitot()){
                         voittoRuutu.getChildren().add(new Label("Pelaaja " + vuoro + " voitti!"));
-                        peliKaynnissa = false;
+                        asettelu.getChildren().remove(1);
                         popup.setScene(voitto);
                         popup.show();
                     }else{
                         if(vuoro == 1){
                             vuoro = 2;
+                            vuorossa.setText("Pelaajan 2 (keltainen) vuoro");
+                            if(ihminenPelaa2){
+                                pyynto.setText("Odotan");
+                            }
                         }else{
                             vuoro =1;
+                            vuorossa.setText("Pelaajan 1 (punainen) vuoro");
+                            if(ihminenPelaa1){
+                                pyynto.setText("Odotan");
+                            }
                         }
                     }
                 }else{
@@ -153,16 +199,25 @@ public class GUI extends Application{
                             break;
                         }
                     }
+                    pelattu++;
                     if(peli.tarkistaVoitot()){
                         voittoRuutu.getChildren().add(new Label("Pelaaja " + vuoro + " voitti!"));
-                        peliKaynnissa = false;
+                        asettelu.getChildren().remove(1);
                         popup.setScene(voitto);
                         popup.show();
                     }else{
                         if(vuoro == 1){
                             vuoro = 2;
+                            vuorossa.setText("Pelaajan 2 (keltainen) vuoro");
+                            if(ihminenPelaa2){
+                                pyynto.setText("Odotan");
+                            }
                         }else{
                             vuoro =1;
+                            vuorossa.setText("Pelaajan 1 (punainen) vuoro");
+                            if(ihminenPelaa1){
+                                pyynto.setText("Odotan");
+                            }
                         }
                     }
                 }else{
@@ -187,16 +242,25 @@ public class GUI extends Application{
                             break;
                         }
                     }
+                    pelattu++;
                     if(peli.tarkistaVoitot()){
                         voittoRuutu.getChildren().add(new Label("Pelaaja " + vuoro + " voitti!"));
-                        peliKaynnissa = false;
+                        asettelu.getChildren().remove(1);
                         popup.setScene(voitto);
                         popup.show();
                     }else{
                         if(vuoro == 1){
                             vuoro = 2;
+                            vuorossa.setText("Pelaajan 2 (keltainen) vuoro");
+                            if(ihminenPelaa2){
+                                pyynto.setText("Odotan");
+                            }
                         }else{
                             vuoro =1;
+                            vuorossa.setText("Pelaajan 1 (punainen) vuoro");
+                            if(ihminenPelaa1){
+                                pyynto.setText("Odotan");
+                            }
                         }
                     }
                 }else{
@@ -221,16 +285,25 @@ public class GUI extends Application{
                             break;
                         }
                     }
+                    pelattu++;
                     if(peli.tarkistaVoitot()){
                         voittoRuutu.getChildren().add(new Label("Pelaaja " + vuoro + " voitti!"));
-                        peliKaynnissa = false;
+                        asettelu.getChildren().remove(1);
                         popup.setScene(voitto);
                         popup.show();
                     }else{
                         if(vuoro == 1){
                             vuoro = 2;
+                            vuorossa.setText("Pelaajan 2 (keltainen) vuoro");
+                            if(ihminenPelaa2){
+                                pyynto.setText("Odotan");
+                            }
                         }else{
                             vuoro =1;
+                            vuorossa.setText("Pelaajan 1 (punainen) vuoro");
+                            if(ihminenPelaa1){
+                                pyynto.setText("Odotan");
+                            }
                         }
                     }
                 }else{
@@ -255,16 +328,25 @@ public class GUI extends Application{
                             break;
                         }
                     }
+                    pelattu++;
                     if(peli.tarkistaVoitot()){
                         voittoRuutu.getChildren().add(new Label("Pelaaja " + vuoro + " voitti!"));
-                        peliKaynnissa = false;
+                        asettelu.getChildren().remove(1);
                         popup.setScene(voitto);
                         popup.show();
                     }else{
                         if(vuoro == 1){
                             vuoro = 2;
+                            vuorossa.setText("Pelaajan 2 (keltainen) vuoro");
+                            if(ihminenPelaa2){
+                                pyynto.setText("Odotan");
+                            }
                         }else{
                             vuoro =1;
+                            vuorossa.setText("Pelaajan 1 (punainen) vuoro");
+                            if(ihminenPelaa1){
+                                pyynto.setText("Odotan");
+                            }
                         }
                     }
                 }else{
@@ -298,16 +380,25 @@ public class GUI extends Application{
                             break;
                         }
                     }
+                    pelattu++;
                     if(peli.tarkistaVoitot()){
                         voittoRuutu.getChildren().add(new Label("Pelaaja " + vuoro + " voitti!"));
-                        peliKaynnissa = false;
+                        asettelu.getChildren().remove(1);
                         popup.setScene(voitto);
                         popup.show();
                     }else{
                         if(vuoro == 1){
                             vuoro = 2;
+                            vuorossa.setText("Pelaajan 2 (keltainen) vuoro");
+                            if(ihminenPelaa2){
+                                pyynto.setText("Odotan");
+                            }
                         }else{
                             vuoro =1;
+                            vuorossa.setText("Pelaajan 1 (punainen) vuoro");
+                            if(ihminenPelaa1){
+                                pyynto.setText("Odotan");
+                            }
                         }
                     }
                 }else{
@@ -316,10 +407,10 @@ public class GUI extends Application{
             }
         });
         sarakkeidenNapit.getChildren().addAll(sarake1, sarake2, sarake3, sarake4, sarake5, sarake6, sarake7);
-        VBox asettelu = new VBox();
+        asettelu.getChildren().addAll(vuoroIndikaattori);
         asettelu.getChildren().addAll(sarakkeidenNapit);
         asettelu.getChildren().addAll(lauta);
-        Scene glauta = new Scene(asettelu, 680, 595);
+        Scene glauta = new Scene(asettelu, 680, 620);
         
         //Aloitusikkuna jossa valitaan pelaajiksi ihmiset tai tekoälyt
         HBox aloitusIkkuna = new HBox();
@@ -372,7 +463,6 @@ public class GUI extends Application{
         aloitaPeli.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent t){
-                peliKaynnissa = true;
                 stage.setScene(glauta);
             }
         });
@@ -383,22 +473,6 @@ public class GUI extends Application{
         Scene aloitus = new Scene(aloitusIkkuna, 200, 100);
         stage.setScene(aloitus);
         stage.show();
-        VBox tekoalynApu = new VBox();
-        Label pyynto = new Label("Odotan");
-        Button tekoalyKutsu = new Button("Tekoälyn siirto");
-        tekoalyKutsu.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent t){
-                Tekoaly tekoaly = new Tekoaly(vuoro);
-                int siirto = tekoaly.haeParasSiirto(peli)+1;
-                pyynto.setText("Voisitko klikata saraketta " + siirto);
-           }
-        });
-        tekoalynApu.getChildren().addAll(tekoalyKutsu, pyynto);
-        Scene avunPyynto = new Scene(tekoalynApu, 200, 50);
-        Stage apuStage = new Stage();
-        apuStage.setScene(avunPyynto);
-        apuStage.show();
     }
 
 
