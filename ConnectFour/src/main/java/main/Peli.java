@@ -26,10 +26,7 @@ public class Peli {
     }
     
     public int getVuoro(){
-        if(vuoro == 1){
-            return 2;
-        }
-        return 1;
+        return vuoro;
     }
     public void setVuoro(int vuor){
         vuoro = vuor;

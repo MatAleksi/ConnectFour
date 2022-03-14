@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 
 public class Tekoaly {
     private int maksimoitavaPelaaja;
+    private int minimoitavaPelaaja;
 
     public Tekoaly(int maxvuoro){
         maksimoitavaPelaaja = maxvuoro;
@@ -14,7 +15,7 @@ public class Tekoaly {
         kopio = peli.getLauta();
         int syvyys = pelattu + 1;
         if(syvyys > 10) syvyys = 10;
-        int parasSiirto = alfaBeta(kopio, 12, Integer.MIN_VALUE, Integer.MAX_VALUE, true, peli.getVuoro(), 0)[0];
+        int parasSiirto = alfaBeta(kopio, 10, Integer.MIN_VALUE, Integer.MAX_VALUE, true, minimoitavaPelaaja, 0)[0];
         return parasSiirto;
     }
     //AlfaBeta-algoritmi

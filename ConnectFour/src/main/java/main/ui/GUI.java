@@ -94,7 +94,7 @@ public class GUI extends Application{
         tekoalynApu.getChildren().addAll(pyynto, tekoalyKutsu);
         tekoalynApu.setSpacing(10);
         vuoroIndikaattori.getChildren().addAll(tekoalynApu);
-        vuoroIndikaattori.setSpacing(250);
+        vuoroIndikaattori.setSpacing(100);
 
         HBox sarakkeidenNapit = new HBox();                
         Button sarake1 = new Button("Sarake 1");
